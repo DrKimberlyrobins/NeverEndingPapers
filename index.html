@@ -14,12 +14,12 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background: radial-gradient(circle at center, #222 0%, #080808 75%);
+    background: radial-gradient(circle at center, #242424 0%, #070707 78%);
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
 
-/* Vertical TikTok-style stage */
+/* Vertical phone stage */
 .stage {
     width: min(100vw, 500px);
     height: 100vh;
@@ -28,34 +28,81 @@ body {
     overflow: hidden;
 }
 
-/* Board */
+/* Cork board */
 .board {
     position: absolute;
-    width: 88%;
-    height: 72%;
-    left: 6%;
-    top: 14%;
-    padding: 16px;
+    width: 90%;
+    height: 82%;
+    left: 5%;
+    top: 9%;
 
-    background: #ded4bd;
-    border: 10px solid #704b2c;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.16), transparent 25%),
+        #d8bd8b;
+
+    border: 11px solid #744b2a;
     border-radius: 10px;
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,.65),
-        inset 0 0 20px rgba(0,0,0,.15);
+        0 12px 35px rgba(0,0,0,.7),
+        inset 0 0 25px rgba(70,40,10,.22);
 
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    gap: 5px;
+    overflow: hidden;
 }
 
-/* Individual papers */
+/* Every paper is its own object */
 .paper {
-    border-radius: 3px;
-    box-shadow: 2px 3px 4px rgba(0,0,0,.25);
-    transform: rotate(var(--tilt));
+    position: absolute;
+
+    width: 74px;
+    height: 68px;
+
+    border-radius: 2px;
+
+    box-shadow:
+        3px 5px 7px rgba(0,0,0,.30);
+
+    transform-origin: 50% 8%;
+
+    /* Gives each paper a tiny curled-looking corner */
+    overflow: hidden;
+}
+
+.paper::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    width: 15px;
+    height: 15px;
+
+    background: rgba(255,255,255,.18);
+
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+}
+
+/* Pushpin */
+.pin {
+    position: absolute;
+
+    width: 10px;
+    height: 10px;
+
+    left: 50%;
+    top: 5px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.92);
+
+    box-shadow:
+        0 2px 3px rgba(0,0,0,.55),
+        inset -2px -2px 2px rgba(0,0,0,.18);
+
+    pointer-events: none;
 }
 </style>
 </head>
@@ -70,28 +117,77 @@ body {
 const board = document.getElementById("board");
 
 const colors = [
-    "#ff4d4d",
-    "#ffd93d",
-    "#5ee66b",
-    "#4da6ff",
-    "#b56cff",
-    "#ff7ac8",
-    "#ff963d",
-    "#43e6df"
+    "#ff4d5a",
+    "#ffcf35",
+    "#55df68",
+    "#419df2",
+    "#a85ff2",
+    "#f566bd",
+    "#ff9238",
+    "#38d2d2",
+    "#f4e65b",
+    "#39c97d"
 ];
 
-/* Create exactly 100 papers */
+const pinColors = [
+    "#ffffff",
+    "#ff3030",
+    "#ffd21f",
+    "#278cff",
+    "#7c3cff",
+    "#18b94f"
+];
+
+/*
+    Create 100 separate papers.
+
+    They are deliberately NOT arranged in rows.
+    Their positions overlap so viewers cannot
+    easily tell how many are actually on the board.
+*/
+
 for (let i = 0; i < 100; i++) {
 
     const paper = document.createElement("div");
     paper.className = "paper";
 
+    /* Random paper color */
     paper.style.background =
         colors[Math.floor(Math.random() * colors.length)];
 
-    const tilt = (Math.random() * 8 - 4).toFixed(1);
-    paper.style.setProperty("--tilt", tilt + "deg");
+    /*
+       Random position.
+       Some papers deliberately overlap heavily.
+    */
+    const left = 2 + Math.random() * 80;
+    const top = 2 + Math.random() * 84;
 
+    paper.style.left = left + "%";
+    paper.style.top = top + "%";
+
+    /* Random angle */
+    const rotation = Math.random() * 34 - 17;
+
+    /* Slightly different paper sizes */
+    const scale = 0.82 + Math.random() * 0.34;
+
+    paper.style.transform =
+        `rotate(${rotation}deg) scale(${scale})`;
+
+    /*
+       Later-created papers sit over earlier ones,
+       creating the bunched-up layered appearance.
+    */
+    paper.style.zIndex = i + 1;
+
+    /* Add a pushpin */
+    const pin = document.createElement("div");
+    pin.className = "pin";
+
+    pin.style.background =
+        pinColors[Math.floor(Math.random() * pinColors.length)];
+
+    paper.appendChild(pin);
     board.appendChild(paper);
 }
 </script>
