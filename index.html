@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Never Ending Papers</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #222 0%, #080808 75%);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Vertical TikTok-style stage */
+.stage {
+    width: min(100vw, 500px);
+    height: 100vh;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Board */
+.board {
+    position: absolute;
+    width: 88%;
+    height: 72%;
+    left: 6%;
+    top: 14%;
+    padding: 16px;
+
+    background: #ded4bd;
+    border: 10px solid #704b2c;
+    border-radius: 10px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.65),
+        inset 0 0 20px rgba(0,0,0,.15);
+
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 5px;
+}
+
+/* Individual papers */
+.paper {
+    border-radius: 3px;
+    box-shadow: 2px 3px 4px rgba(0,0,0,.25);
+    transform: rotate(var(--tilt));
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+    <div class="board" id="board"></div>
+</div>
+
+<script>
+const board = document.getElementById("board");
+
+const colors = [
+    "#ff4d4d",
+    "#ffd93d",
+    "#5ee66b",
+    "#4da6ff",
+    "#b56cff",
+    "#ff7ac8",
+    "#ff963d",
+    "#43e6df"
+];
+
+/* Create exactly 100 papers */
+for (let i = 0; i < 100; i++) {
+
+    const paper = document.createElement("div");
+    paper.className = "paper";
+
+    paper.style.background =
+        colors[Math.floor(Math.random() * colors.length)];
+
+    const tilt = (Math.random() * 8 - 4).toFixed(1);
+    paper.style.setProperty("--tilt", tilt + "deg");
+
+    board.appendChild(paper);
+}
+</script>
+
+</body>
+</html>
