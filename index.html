@@ -420,6 +420,73 @@ for (let i = 0; i < 100; i++) {
     paper.appendChild(pin);
     board.appendChild(paper);
 }
+/* =========================
+   ROBOT'S FIRST PAPER GRAB
+   ========================= */
+
+function robotFirstGrab() {
+
+    const papers = document.querySelectorAll(".paper");
+
+    if (papers.length === 0) return;
+
+    /* Pick one paper from the right side of the board */
+    const candidates = Array.from(papers).filter(paper => {
+        return parseFloat(paper.style.left) > 55;
+    });
+
+    if (candidates.length === 0) return;
+
+    const paper =
+        candidates[Math.floor(Math.random() * candidates.length)];
+
+    /*
+       Bring the chosen paper above the others
+       so we can clearly see Robot Robins take it.
+    */
+    paper.style.zIndex = "500";
+
+    paper.style.transition =
+        "transform 1.4s ease-in-out, " +
+        "left 1.4s ease-in-out, " +
+        "top 1.4s ease-in-out, " +
+        "opacity .4s ease-in";
+
+    /*
+       Move the paper toward Robot Robins' hand.
+    */
+    setTimeout(() => {
+
+        paper.style.left = "78%";
+        paper.style.top = "55%";
+        paper.style.transform =
+            "rotate(18deg) scale(1.05)";
+
+    }, 1200);
+
+    /*
+       Then Robot Robins pulls the paper
+       off the right side of the screen.
+    */
+    setTimeout(() => {
+
+        paper.style.left = "125%";
+        paper.style.top = "58%";
+        paper.style.transform =
+            "rotate(55deg) scale(.9)";
+
+    }, 2700);
+
+    /*
+       Remove the paper after it leaves.
+    */
+    setTimeout(() => {
+        paper.remove();
+    }, 4300);
+}
+
+/* Give the page a moment to settle, then do ONE grab */
+setTimeout(robotFirstGrab, 2500);    
 </script>
 
 </body>
