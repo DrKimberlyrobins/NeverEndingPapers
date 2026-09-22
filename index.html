@@ -19,7 +19,10 @@ body {
     overflow: hidden;
 }
 
-/* Vertical phone stage */
+/* =========================
+   PHONE STAGE
+   ========================= */
+
 .stage {
     width: min(100vw, 500px);
     height: 100vh;
@@ -28,17 +31,26 @@ body {
     overflow: hidden;
 }
 
-/* Cork board */
+/* =========================
+   BOARD
+   ========================= */
+
 .board {
     position: absolute;
     z-index: 1;
+
     width: 90%;
     height: 82%;
+
     left: 5%;
     top: 9%;
 
     background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.16), transparent 25%),
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(255,255,255,.16),
+            transparent 25%
+        ),
         #d8bd8b;
 
     border: 11px solid #744b2a;
@@ -51,7 +63,10 @@ body {
     overflow: hidden;
 }
 
-/* Every paper is its own object */
+/* =========================
+   PAPERS
+   ========================= */
+
 .paper {
     position: absolute;
 
@@ -63,15 +78,13 @@ body {
     box-shadow:
         3px 5px 7px rgba(0,0,0,.30);
 
-    transform-origin: 50% 8%;
-
-    /* Gives each paper a tiny curled-looking corner */
-    overflow: hidden;
+    transform-origin: center center;
 }
 
 .paper::after {
     content: "";
     position: absolute;
+
     right: 0;
     bottom: 0;
 
@@ -83,7 +96,10 @@ body {
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
-/* Pushpin */
+/* =========================
+   PUSHPINS
+   ========================= */
+
 .pin {
     position: absolute;
 
@@ -97,135 +113,341 @@ body {
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,.92);
-
     box-shadow:
         0 2px 3px rgba(0,0,0,.55),
         inset -2px -2px 2px rgba(0,0,0,.18);
 
     pointer-events: none;
 }
- /* =========================
-   FLYING PAPERS
+
+/* =========================
+   ROBOT ROBINS
    ========================= */
 
-let lastViewerThrow = 0;
+.robot {
+    position: absolute;
 
-function flyOnePaper() {
+    right: -34px;
+    top: 24%;
 
-    const papers = Array.from(document.querySelectorAll(".paper"));
+    width: 195px;
+    height: 360px;
 
-    if (papers.length === 0) return;
+    z-index: 500;
 
-    /* Pick a random paper */
-    const paper =
-        papers[Math.floor(Math.random() * papers.length)];
-
-    paper.style.zIndex = "600";
-
-    /*
-       Most papers fly normally.
-       Occasionally one comes straight at the viewer.
-    */
-    const now = Date.now();
-
-    const canThrowAtViewer =
-        now - lastViewerThrow > 7000;
-
-    const throwAtViewer =
-        canThrowAtViewer && Math.random() < 0.22;
-
-    if (throwAtViewer) {
-
-        lastViewerThrow = now;
-
-        /* PAPER COMES AT THE VIEWER */
-        paper.style.transition =
-            "transform 1.1s ease-in, opacity .25s ease-in 1s";
-
-        setTimeout(() => {
-
-            paper.style.transform =
-                "translate(0px, 80px) rotate(35deg) scale(8)";
-
-            paper.style.opacity = "0";
-
-        }, 100);
-
-        setTimeout(() => {
-            paper.remove();
-        }, 1400);
-
-    } else {
-
-        /* NORMAL RANDOM FLIGHT */
-
-        const direction =
-            Math.floor(Math.random() * 4);
-
-        let x;
-        let y;
-
-        if (direction === 0) {
-            x = -650;
-            y = Math.random() * 300 - 150;
-        }
-
-        if (direction === 1) {
-            x = 650;
-            y = Math.random() * 300 - 150;
-        }
-
-        if (direction === 2) {
-            x = Math.random() * 400 - 200;
-            y = -700;
-        }
-
-        if (direction === 3) {
-            x = Math.random() * 400 - 200;
-            y = 700;
-        }
-
-        const spin =
-            Math.random() * 900 - 450;
-
-        paper.style.transition =
-            "transform 1.5s ease-in, opacity .3s ease-in 1.2s";
-
-        setTimeout(() => {
-
-            paper.style.transform =
-                `translate(${x}px, ${y}px)
-                 rotate(${spin}deg)
-                 scale(.75)`;
-
-            paper.style.opacity = "0";
-
-        }, 100);
-
-        setTimeout(() => {
-            paper.remove();
-        }, 1700);
-    }
+    pointer-events: none;
 }
 
+/* HEAD */
 
-/*
-   SAME STEADY PACE.
-   One paper starts flying every 1.4 seconds.
-*/
-setTimeout(() => {
+.robot-head {
+    position: absolute;
 
-    flyOnePaper();
+    right: 0;
+    top: 0;
 
-    setInterval(() => {
-        flyOnePaper();
-    }, 1400);
+    width: 125px;
+    height: 105px;
 
-}, 2000);
+    background:
+        linear-gradient(
+            145deg,
+            #f2f2f2,
+            #8d969e 55%,
+            #454c52
+        );
+
+    border: 5px solid #30363b;
+    border-radius: 28px;
+
+    box-shadow:
+        0 8px 12px rgba(0,0,0,.45),
+        inset 4px 4px 5px rgba(255,255,255,.7);
+
+    transform-origin: bottom center;
+
+    transition: transform .7s ease-in-out;
+}
+
+/* FACE */
+
+.robot-face {
+    position: absolute;
+    inset: 11px;
+
+    background: #111820;
+
+    border-radius: 20px;
+
+    box-shadow:
+        inset 0 0 12px rgba(0,0,0,.9),
+        0 0 8px rgba(54,205,255,.5);
+}
+
+/* EYES */
+
+.eye {
+    position: absolute;
+
+    top: 27px;
+
+    width: 22px;
+    height: 25px;
+
+    background: #59ddff;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px #28cfff,
+        inset 5px 3px 0 rgba(255,255,255,.75);
+
+    transition: transform .5s ease;
+}
+
+.left-eye {
+    left: 18px;
+}
+
+.right-eye {
+    right: 18px;
+}
+
+/* MOUTH */
+
+.robot-mouth {
+    position: absolute;
+
+    width: 36px;
+    height: 17px;
+
+    left: 50%;
+    bottom: 14px;
+
+    transform: translateX(-50%);
+
+    border-bottom: 5px solid #59ddff;
+
+    border-radius: 0 0 30px 30px;
+}
+
+/* =========================
+   CONFUSED ROBOT ARMS
+   ========================= */
+
+.arm {
+    position: absolute;
+
+    width: 88px;
+    height: 32px;
+
+    background:
+        linear-gradient(
+            #eceeef,
+            #818b92 55%,
+            #4c545a
+        );
+
+    border: 4px solid #333a3f;
+
+    border-radius: 20px;
+
+    box-shadow: 3px 5px 8px rgba(0,0,0,.4);
+}
+
+/* Left arm points toward board */
+
+.left-arm {
+    left: 0;
+    top: 135px;
+
+    transform: rotate(-28deg);
+}
+
+/* Right arm raised */
+
+.right-arm {
+    right: 0;
+    top: 145px;
+
+    transform: rotate(45deg);
+}
+
+/* HANDS */
+
+.hand {
+    position: absolute;
+
+    width: 42px;
+    height: 42px;
+
+    background: #7a858c;
+
+    border: 4px solid #30363b;
+
+    border-radius: 45%;
+
+    top: -9px;
+}
+
+/* Hand on end of left arm */
+
+.left-arm .hand {
+    left: -25px;
+}
+
+/* Hand on end of right arm */
+
+.right-arm .hand {
+    right: -25px;
+}
+
+/* Fingers */
+
+.hand::before,
+.hand::after {
+    content: "";
+
+    position: absolute;
+
+    width: 10px;
+    height: 30px;
+
+    background: #aab2b7;
+
+    border: 2px solid #30363b;
+
+    border-radius: 7px;
+
+    top: -20px;
+}
+
+.hand::before {
+    left: 4px;
+    transform: rotate(-25deg);
+}
+
+.hand::after {
+    right: 4px;
+    transform: rotate(25deg);
+}
+
+/* =========================
+   SPEECH BUBBLE
+   ========================= */
+
+.speech {
+    position: absolute;
+
+    right: 18px;
+    top: 10%;
+
+    z-index: 800;
+
+    background: white;
+    color: #111;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    padding: 12px 16px;
+
+    border-radius: 20px;
+
+    border: 3px solid #30363b;
+
+    box-shadow: 0 6px 12px rgba(0,0,0,.35);
+
+    opacity: 0;
+
+    transform: scale(.7);
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+
+    pointer-events: none;
+}
+
+.speech.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.speech::after {
+    content: "";
+
+    position: absolute;
+
+    right: 28px;
+    bottom: -15px;
+
+    border-left: 12px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 17px solid white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+
+    <div class="board" id="board"></div>
+
+    <div class="speech" id="speech">
+        Did you see that? 👀
+    </div>
+
+    <div class="robot">
+
+        <div class="robot-head" id="robotHead">
+
+            <div class="robot-face">
+
+                <div class="eye left-eye" id="leftEye"></div>
+                <div class="eye right-eye" id="rightEye"></div>
+
+                <div class="robot-mouth"></div>
+
+            </div>
+
+        </div>
+
+        <div class="arm left-arm">
+            <div class="hand"></div>
+        </div>
+
+        <div class="arm right-arm">
+            <div class="hand"></div>
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
+
+/* =========================
+   SETUP
+   ========================= */
+
 const board = document.getElementById("board");
+
+const robotHead =
+    document.getElementById("robotHead");
+
+const leftEye =
+    document.getElementById("leftEye");
+
+const rightEye =
+    document.getElementById("rightEye");
+
+const speech =
+    document.getElementById("speech");
+
 
 const colors = [
     "#ff4d5a",
@@ -240,6 +462,7 @@ const colors = [
     "#39c97d"
 ];
 
+
 const pinColors = [
     "#ffffff",
     "#ff3030",
@@ -249,125 +472,413 @@ const pinColors = [
     "#18b94f"
 ];
 
-/*
-    Create 100 separate papers.
 
-    They are deliberately NOT arranged in rows.
-    Their positions overlap so viewers cannot
-    easily tell how many are actually on the board.
-*/
+/* =========================
+   CREATE ONE PAPER
+   ========================= */
 
-for (let i = 0; i < 100; i++) {
+function createPaper() {
 
-    const paper = document.createElement("div");
+    const paper =
+        document.createElement("div");
+
     paper.className = "paper";
 
-    /* Random paper color */
+
+    /* COLOR */
+
     paper.style.background =
-        colors[Math.floor(Math.random() * colors.length)];
+        colors[
+            Math.floor(
+                Math.random() * colors.length
+            )
+        ];
 
-    /*
-       Random position.
-       Some papers deliberately overlap heavily.
-    */
-    const left = -5 + Math.random() * 82;
-    const top = -3 + Math.random() * 88;
 
-    paper.style.left = left + "%";
-    paper.style.top = top + "%";
+    /* POSITION */
 
-    /* Random angle */
-    const rotation = Math.random() * 34 - 17;
+    const left =
+        -5 + Math.random() * 82;
 
-    /* Slightly different paper sizes */
-    const scale = 0.82 + Math.random() * 0.34;
+    const top =
+        -3 + Math.random() * 88;
+
+    paper.style.left =
+        left + "%";
+
+    paper.style.top =
+        top + "%";
+
+
+    /* ROTATION */
+
+    const rotation =
+        Math.random() * 34 - 17;
+
+    const scale =
+        .82 + Math.random() * .34;
+
+    paper.dataset.rotation =
+        rotation;
+
+    paper.dataset.scale =
+        scale;
 
     paper.style.transform =
-        `rotate(${rotation}deg) scale(${scale})`;
+        `rotate(${rotation}deg)
+         scale(${scale})`;
 
-    /*
-       Later-created papers sit over earlier ones,
-       creating the bunched-up layered appearance.
-    */
-    paper.style.zIndex = i + 1;
 
-    /* Add a pushpin */
-    const pin = document.createElement("div");
+    /* PIN */
+
+    const pin =
+        document.createElement("div");
+
     pin.className = "pin";
 
     pin.style.background =
-        pinColors[Math.floor(Math.random() * pinColors.length)];
+        pinColors[
+            Math.floor(
+                Math.random() * pinColors.length
+            )
+        ];
 
     paper.appendChild(pin);
+
     board.appendChild(paper);
+
 }
+
+
 /* =========================
-   ROBOT'S FIRST PAPER GRAB
+   START WITH 100 PAPERS
    ========================= */
 
-function robotFirstGrab() {
-
-    const papers = document.querySelectorAll(".paper");
-
-    if (papers.length === 0) return;
-
-    /* Pick one paper from the right side of the board */
-    const candidates = Array.from(papers).filter(paper => {
-        return parseFloat(paper.style.left) > 55;
-    });
-
-    if (candidates.length === 0) return;
-
-    const paper =
-        candidates[Math.floor(Math.random() * candidates.length)];
-
-    /*
-       Bring the chosen paper above the others
-       so we can clearly see Robot Robins take it.
-    */
-    paper.style.zIndex = "500";
-
-    paper.style.transition =
-        "transform 1.4s ease-in-out, " +
-        "left 1.4s ease-in-out, " +
-        "top 1.4s ease-in-out, " +
-        "opacity .4s ease-in";
-
-    /*
-       Move the paper toward Robot Robins' hand.
-    */
-    setTimeout(() => {
-
-        paper.style.left = "78%";
-        paper.style.top = "55%";
-        paper.style.transform =
-            "rotate(18deg) scale(1.05)";
-
-    }, 1200);
-
-    /*
-       Then Robot Robins pulls the paper
-       off the right side of the screen.
-    */
-    setTimeout(() => {
-
-        paper.style.left = "125%";
-        paper.style.top = "58%";
-        paper.style.transform =
-            "rotate(55deg) scale(.9)";
-
-    }, 2700);
-
-    /*
-       Remove the paper after it leaves.
-    */
-    setTimeout(() => {
-        paper.remove();
-    }, 4300);
+for (let i = 0; i < 100; i++) {
+    createPaper();
 }
 
-/* Give the page a moment to settle, then do ONE grab */
-setTimeout(robotFirstGrab, 2500);    
+
+/* =========================
+   ROBOT LOOKS AT BOARD
+   ========================= */
+
+function lookAtBoard() {
+
+    robotHead.style.transform =
+        "rotate(-9deg)";
+
+    leftEye.style.transform =
+        "translateX(-5px)";
+
+    rightEye.style.transform =
+        "translateX(-5px)";
+}
+
+
+/* =========================
+   ROBOT LOOKS AT VIEWER
+   ========================= */
+
+function lookAtViewer() {
+
+    robotHead.style.transform =
+        "rotate(5deg)";
+
+    leftEye.style.transform =
+        "translateX(0)";
+
+    rightEye.style.transform =
+        "translateX(0)";
+}
+
+
+/* =========================
+   DID YOU SEE THAT?
+   ========================= */
+
+function robotReaction() {
+
+    lookAtViewer();
+
+    setTimeout(() => {
+        speech.classList.add("show");
+    }, 450);
+
+    setTimeout(() => {
+        speech.classList.remove("show");
+    }, 2200);
+
+    setTimeout(() => {
+        lookAtBoard();
+    }, 2900);
+}
+
+
+/* =========================
+   PAPER FLIGHT
+   ========================= */
+
+let lastViewerThrow = 0;
+
+
+function flyPaper() {
+
+    const papers =
+        Array.from(
+            document.querySelectorAll(".paper")
+        );
+
+
+    /*
+       NEVER LET THE BOARD EMPTY.
+
+       Once we get near 20 visible papers,
+       quietly create replacements.
+    */
+
+    if (papers.length <= 22) {
+
+        for (let i = 0; i < 10; i++) {
+            createPaper();
+        }
+    }
+
+
+    const currentPapers =
+        Array.from(
+            document.querySelectorAll(".paper")
+        );
+
+
+    if (currentPapers.length === 0) {
+        return;
+    }
+
+
+    /* RANDOM PAPER */
+
+    const paper =
+        currentPapers[
+            Math.floor(
+                Math.random() *
+                currentPapers.length
+            )
+        ];
+
+
+    paper.style.zIndex = "400";
+
+
+    /* =========================
+       RANDOM VIEWER THROW
+       ========================= */
+
+    const now =
+        Date.now();
+
+
+    /*
+       At least 7 seconds must pass
+       between viewer throws.
+    */
+
+    const viewerThrowAllowed =
+        now - lastViewerThrow > 7000;
+
+
+    const viewerThrow =
+        viewerThrowAllowed &&
+        Math.random() < .22;
+
+
+    if (viewerThrow) {
+
+        lastViewerThrow = now;
+
+
+        paper.style.transition =
+            "transform 1.05s ease-in, " +
+            "opacity .20s ease-in .90s";
+
+
+        setTimeout(() => {
+
+            paper.style.transform =
+                "translate(-40px, 80px) " +
+                "rotate(35deg) " +
+                "scale(9)";
+
+            paper.style.opacity = "0";
+
+        }, 80);
+
+
+        /*
+           Robot notices what happened.
+        */
+
+        setTimeout(() => {
+            robotReaction();
+        }, 450);
+
+
+        setTimeout(() => {
+            paper.remove();
+        }, 1300);
+
+    }
+
+
+    /* =========================
+       NORMAL PAPER FLIGHT
+       ========================= */
+
+    else {
+
+        const direction =
+            Math.floor(
+                Math.random() * 4
+            );
+
+
+        let x = 0;
+        let y = 0;
+
+
+        /* LEFT */
+
+        if (direction === 0) {
+
+            x = -650;
+
+            y =
+                Math.random() * 300 - 150;
+        }
+
+
+        /* RIGHT */
+
+        if (direction === 1) {
+
+            x = 650;
+
+            y =
+                Math.random() * 300 - 150;
+        }
+
+
+        /* UP */
+
+        if (direction === 2) {
+
+            x =
+                Math.random() * 400 - 200;
+
+            y = -700;
+        }
+
+
+        /* DOWN */
+
+        if (direction === 3) {
+
+            x =
+                Math.random() * 400 - 200;
+
+            y = 700;
+        }
+
+
+        const spin =
+            Math.random() * 900 - 450;
+
+
+        paper.style.transition =
+            "transform 1.45s ease-in, " +
+            "opacity .25s ease-in 1.15s";
+
+
+        setTimeout(() => {
+
+            paper.style.transform =
+                `translate(${x}px, ${y}px)
+                 rotate(${spin}deg)
+                 scale(.75)`;
+
+            paper.style.opacity = "0";
+
+        }, 80);
+
+
+        setTimeout(() => {
+            paper.remove();
+        }, 1600);
+    }
+}
+
+
+/* =========================
+   START THE SHOW
+   ========================= */
+
+/* Robot begins by watching the board */
+
+lookAtBoard();
+
+
+/*
+   Give viewer two seconds
+   to see the full board.
+*/
+
+setTimeout(() => {
+
+    flyPaper();
+
+
+    /*
+       SAME STEADY PACE.
+
+       One paper starts moving
+       every 1.4 seconds.
+    */
+
+    setInterval(() => {
+
+        flyPaper();
+
+    }, 1400);
+
+}, 2000);
+
+
+/* =========================
+   OCCASIONAL CONFUSED LOOK
+   ========================= */
+
+/*
+   Even when a paper does not fly
+   at the viewer, Robot Robins
+   occasionally checks the viewer
+   like he is wondering what is
+   happening.
+*/
+
+setInterval(() => {
+
+    if (Math.random() < .45) {
+
+        lookAtViewer();
+
+        setTimeout(() => {
+            lookAtBoard();
+        }, 1700);
+
+    }
+
+}, 6500);
+
 </script>
 
 </body>
